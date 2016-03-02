@@ -168,20 +168,58 @@ public class Set<T> {
    **/
   public void intersect(Set s) {
     // Your solution here.
+	  if(count == 0){
+		  return;
+	  }
 	  if(s.cardinality() == 0){
-	
+		  try{
+			  ListNode node = elements.front();
+			  while(node.next().isValidNode()){
+				  node = node.next();
+				  node.prev().remove();
+				  count --;
+				  }
+			  if(count == 1){
+				  elements.front().remove();
+			  }
+			  if(count != 0){
+				System.out.println("intersect with an empty set should be empty too");  
+			  }
+			  }
+		  catch(InvalidNodeException e){
+			  System.out.println("intersect with an empty set shrows exception");
+			  }
 	  }
 	  ListNode nodeS = s.first();
 	  ListNode node = elements.front();
 	  try{
 		  T i1 = (T) nodeS.item();
 		  T i2 = (T) node.item();
-		  if(nodeS.isValidNode() && node.isValidNode()){
+		  while(nodeS.isValidNode() && node.isValidNode()){
 			  if(((Comparable<T>) i1).compareTo(i2) == 0){
+				  if(nodeS.next().isValidNode() && node.next().isValidNode() ){
+					  nodeS = nodeS.next();
+					  node = node.next();
+					  i1 = (T) nodeS.item();
+					  i2 = (T) node.item(); 
+				  }
+				  else if(nodeS.next().isValidNode()){
+					  return;
+				  }
+				  else{
+					  while(node.next().isValidNode()){
+						  node = node.next();
+						  node.prev().remove();
+						  count--;
+						  if(!node.next().isValidNode()){
+							  return;
+						  }
+					  }
 				  nodeS = nodeS.next();
 				  node = node.next();
 				  i1 = (T) nodeS.item();
 				  i2 = (T) node.item();
+				  }
 			  }
 			  else if(((Comparable<T>) i1).compareTo(i2) < 0){
 				  nodeS = nodeS.next();

@@ -77,6 +77,7 @@ public class DList extends List {
     //   the `list' field (second parameter) as well.
     if(size == 0){
       head.next = newNode(item, this, head, head);
+      head.prev = head.next;
       size = 1;
     }
     else{

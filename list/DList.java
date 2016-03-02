@@ -98,9 +98,14 @@ public class DList extends List {
     // Your solution here.  Similar to Homework 4, but now you need to specify
     //   the `list' field (second parameter) as well.
     if (size == 0) {
-      head.prev = newNode(item, this, head.prev, head);
-      head.prev.prev.next = head.prev;
-      size ++;      
+    	head.prev = newNode(item, this, head.prev, head);
+        head.prev.prev.next = head.prev;
+        size ++;      
+    }
+    else{
+    	head.prev = newNode(item, this, head.prev, head);
+    	head.prev.prev.next = head.prev;
+    	size ++;
     }
   }
 

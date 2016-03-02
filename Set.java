@@ -1,14 +1,16 @@
 /* Set.java */
 
 import list.*;
+import java.lang.Comparable;
 
 /**
  *  A Set is a collection of Comparable elements stored in sorted order.
  *  Duplicate elements are not permitted in a Set.
  **/
-public class Set {
+public class Set<T> {
   /* Fill in the data fields here. */
-
+  private DList elements;
+  private int count;
   /**
    * Set ADT invariants:
    *  1)  The Set's elements must be precisely the elements of the List.
@@ -24,6 +26,8 @@ public class Set {
    **/
   public Set() { 
     // Your solution here.
+    elements = new DList();
+    count = 0;
   }
 
   /**
@@ -33,9 +37,12 @@ public class Set {
    **/
   public int cardinality() {
     // Replace the following line with your solution.
-    return 0;
+    return count;
   }
-
+  
+  public ListNode first(){
+	  return elements.front();
+  }
   /**
    *  insert() inserts a Comparable element into this Set.
    *
@@ -44,8 +51,36 @@ public class Set {
    *
    *  Performance:  runs in O(this.cardinality()) time.
    **/
-  public void insert(Comparable c) {
+  public void insert(Comparable<T> c) {
     // Your solution here.
+    if (count == 0) {
+      elements.insertFront(c);
+      count = 1;
+    }
+    else{
+      ListNode node = elements.front();
+      while(node.isValidNode() ){
+    	  try{
+	    	  if(c.compareTo((T) node.item()) == 0){
+	    		  System.out.println("duplicate item");
+	    		  return;
+	    	  }
+	    	  else if(c.compareTo((T) node.item()) < 0){
+	    		  node = node.next();  
+	    	  }
+	    	  else{
+	    		  node.insertBefore(c);
+	    		  count ++;
+	    		  return;
+	    	  }
+    	  }
+    	  catch(InvalidNodeException e){
+    		  System.out.println(e);
+    	  }
+      }
+      elements.insertBack(c);
+      count ++;
+    }
   }
 
   /**
@@ -63,8 +98,45 @@ public class Set {
    *  DO NOT MODIFY THE SET s.
    *  DO NOT ATTEMPT TO COPY ELEMENTS; just copy _references_ to them.
    **/
-  public void union(Set s) {
+  public void union(Set<T> s) {
     // Your solution here.
+	  ListNode nodeS = s.first();
+	  ListNode node = elements.front();
+	  try{
+		  T i1 = (T) nodeS.item();
+		  T i2 = (T) node.item();
+		  if(nodeS.isValidNode() && node.isValidNode()){
+			  if(((Comparable<T>) i1).compareTo(i2) == 0){
+				  nodeS = nodeS.next();
+				  node = node.next();
+				  i1 = (T) nodeS.item();
+				  i2 = (T) node.item();
+			  }
+			  else if(((Comparable<T>) i1).compareTo(i2) < 0){
+				  node.insertBefore(i1);
+				  count ++;
+				  node = node.next();
+				  nodeS = nodeS.next();
+				  i1 = (T) nodeS.item();
+				  i2 = (T) node.item();
+			  }
+			  else {
+				  node = node.next();
+				  i2 = (T) node.item();
+			  }
+		  }
+		  if(nodeS.isValidNode()){
+			  while(nodeS.isValidNode()){
+				  node.insertAfter(nodeS.item());
+				  node = node.next();
+				  nodeS = nodeS.next();
+				  count++;
+			  }
+		  }
+	  }
+	  catch(InvalidNodeException e){
+		  System.out.println("union an invalid Node");
+	  }
   }
 
   /**
